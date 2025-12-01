@@ -653,10 +653,6 @@ $tagmanager = \App\Models\TagManager::first();
         });
     </script>
 
-
-
-
-
     @yield('script')
 
 

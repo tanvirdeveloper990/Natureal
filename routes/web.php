@@ -25,24 +25,10 @@ Route::get('/cmd', function () {
 
 
 
-// SSLCOMMERZ Start
-Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
-Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
-
-Route::post('/pay', [SslCommerzPaymentController::class, 'index'])->name('pay');
-Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
-
-
-Route::post('/success', [SslCommerzPaymentController::class, 'success']);
-Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
-Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
-
-Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
-//SSLCOMMERZ END
-
-
 
 Route::get('/', [WebsiteController::class, 'index'])->name('index');
+Route::get('/about', [WebsiteController::class, 'about'])->name('about');
+Route::get('/sellers', [WebsiteController::class, 'sellers'])->name('sellers');
 Route::get('/products', [WebsiteController::class, 'products'])->name('products');
 Route::get('/product/{slug}', [WebsiteController::class, 'productSingle'])->name('product.single');
 Route::get('/blogs/{slug}', [WebsiteController::class, 'singleBlog'])->name('blogs-single');
@@ -51,13 +37,33 @@ Route::get('/product/{slug}/{affiliate_id}', [WebsiteController::class, 'product
 
 Route::get('/checkout', [WebsiteController::class, 'checkout'])->name('checkout');
 Route::post('/order-store', [WebsiteController::class, 'orderStore'])->name('order.store');
-Route::get('categories/{slug}', [WebsiteController::class, 'categories'])->name('categories');
-Route::get('/live-search', [WebsiteController::class, 'liveSearch'])->name('product.liveSearch');
-Route::post('/coupon/validate', [WebsiteController::class, 'validateCoupon'])->name('coupon.validate');
-
 // Track Order
 Route::get('/track-order', [WebsiteController::class, 'trackorder'])->name('track.order');
 Route::get('/success/{order_id}', [WebsiteController::class, 'orderSuccess'])->name('order.success');
+
+
+
+
+// SSLCOMMERZ Start
+Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
+Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
+
+Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+Route::post('/pay', [SslCommerzPaymentController::class, 'pay'])->name('pay');
+Route::post('/fail', [SslCommerzPaymentController::class, 'fail'])->name('fail');
+Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel'])->name('cancel');
+Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
+
+//SSLCOMMERZ END
+
+
+
+
+
+Route::get('categories/{slug}', [WebsiteController::class, 'categories'])->name('categories');
+Route::get('/live-search', [WebsiteController::class, 'liveSearch'])->name('product.liveSearch');
+Route::post('/coupon/validate', [WebsiteController::class, 'validateCoupon'])->name('coupon.validate');
 
 
 

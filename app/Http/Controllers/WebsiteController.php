@@ -26,7 +26,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 class WebsiteController extends Controller
 {
-    
+
 
     public function index()
     {
@@ -36,30 +36,41 @@ class WebsiteController extends Controller
         $is_popular = Product::where('status', 1)->where('is_popular', 1)->get();
         $is_featured = Product::where('status', 1)->where('is_featured', 1)->get();
         $banner = Bannar::first();
-        $customer_reviews = CustomerReview::where('status',1)->latest()->get();
-        $blogs = Blog::where('status',1)->latest()->get();
-        return view('frontend.index', compact('customer_reviews','blogs','setting', 'categories', 'is_new', 'is_popular', 'is_featured','banner'));
+        $customer_reviews = CustomerReview::where('status', 1)->latest()->get();
+        $blogs = Blog::where('status', 1)->latest()->get();
+        return view('frontend.index', compact('customer_reviews', 'blogs', 'setting', 'categories', 'is_new', 'is_popular', 'is_featured', 'banner'));
     }
+
+    public function about()
+    {
+        return view('frontend.about');
+    }
+    public function sellers()
+    {
+        return view('frontend.sellers');
+    }
+
+
     public function products(Request $request)
-{
-    $setting = Setting::first();
+    {
+        $setting = Setting::first();
 
-    $query = Product::where('status', 1);
+        $query = Product::where('status', 1);
 
-    $categoryName = 'All Products'; // default title
+        $categoryName = 'All Products'; // default title
 
-    if ($request->has('category') && !empty($request->category)) {
-        $query->where('category_id', $request->category);
-        $category = Category::find($request->category);
-        if ($category) {
-            $categoryName = $category->name; // set category name dynamically
+        if ($request->has('category') && !empty($request->category)) {
+            $query->where('category_id', $request->category);
+            $category = Category::find($request->category);
+            if ($category) {
+                $categoryName = $category->name; // set category name dynamically
+            }
         }
+
+        $products = $query->latest()->get();
+
+        return view('frontend.products', compact('setting', 'products', 'categoryName'));
     }
-
-    $products = $query->latest()->get();
-
-    return view('frontend.products', compact('setting', 'products', 'categoryName'));
-}
 
 
     public function productSingle($slug)
@@ -67,17 +78,17 @@ class WebsiteController extends Controller
         $item = Product::where('slug', $slug)->firstOrFail(); // not found হলে automatic 404
         $setting = Setting::first();
 
-        $affiliate ='';
+        $affiliate = '';
         // Related products fetch
         $relatedProducts = $item->relatedProducts();
-        return view('frontend.product-single', compact('item', 'setting', 'relatedProducts','affiliate'));
+        return view('frontend.product-single', compact('item', 'setting', 'relatedProducts', 'affiliate'));
     }
     public function singleBlog($slug)
     {
         $data = Blog::where('slug', $slug)->firstOrFail(); // not found হলে automatic 404
         $setting = Setting::first();
-        $products = Product::where('status',1)->latest()->get();
-        return view('frontend.blog-single', compact('data', 'setting','products'));
+        $products = Product::where('status', 1)->latest()->get();
+        return view('frontend.blog-single', compact('data', 'setting', 'products'));
     }
 
     public function productSingleAffiliate($slug, $affiliate_id)
@@ -94,8 +105,8 @@ class WebsiteController extends Controller
         // Return the view with the necessary data
         return view('frontend.product-single', compact('item', 'setting', 'relatedProducts', 'affiliate'));
     }
-    
-    
+
+
     public function categories($slug)
     {
         $category = Category::with('products')->where('slug', $slug)->firstOrFail(); // not found হলে automatic 404
@@ -118,10 +129,10 @@ class WebsiteController extends Controller
     public function validateCoupon(Request $request)
     {
         $coupon = Coupon::where('coupon_code', $request->coupon_code)
-                        ->where('status', 1)
-                        ->first();
+            ->where('status', 1)
+            ->first();
 
-        if($coupon){
+        if ($coupon) {
             return response()->json([
                 'valid' => true,
                 'amount' => $coupon->amount
@@ -136,7 +147,7 @@ class WebsiteController extends Controller
     public function checkout()
     {
         $ssl = SslCommerc::first();
-        return view('frontend.checkout',compact('ssl'));
+        return view('frontend.checkout', compact('ssl'));
     }
 
     public function orderStore(Request $request)
@@ -157,8 +168,8 @@ class WebsiteController extends Controller
         } else {
             // Generate unique email and username
             $uniqueString = Str::random(6) . time();
-            $guestEmail = 'guest_'.$uniqueString.'@example.com';
-            $guestUsername = 'guest_'.$uniqueString;
+            $guestEmail = 'guest_' . $uniqueString . '@example.com';
+            $guestUsername = 'guest_' . $uniqueString;
 
             // Create a new guest user
             $guestUser = User::create([
@@ -324,8 +335,8 @@ class WebsiteController extends Controller
             $invoiceId = $request->invoice_id;
 
             $order = Order::with('orderItems.product', 'user')
-                        ->where('order_id', $invoiceId)
-                        ->first();
+                ->where('order_id', $invoiceId)
+                ->first();
         }
 
         return view('frontend.track-order', compact('order'));
@@ -336,5 +347,4 @@ class WebsiteController extends Controller
         $data = Order::where('order_id', $order_id)->firstOrFail();
         return view('frontend.success', compact('data'));
     }
-
 }

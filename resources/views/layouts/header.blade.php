@@ -25,8 +25,10 @@ $wishlistCount = Wishlist::where('user_id', auth()->id())->count();
 
 					<a href="{{ route('index') }}" class="text-decoration-none text-light ms-3">Home</a>
 					<a href="{{ route('products') }}" class="text-decoration-none text-light">Products</a>
+					<a href="{{ route('sellers') }}" class="text-decoration-none text-light">Sellers</a>
 					<a href="{{ route('affiliate.register') }}" class="text-decoration-none text-light">Affiliate</a>
-					<a href="{{ route('contacts') }}" class="text-decoration-none text-light">Contact</a>
+					<a href="{{ route('about') }}" class="text-decoration-none text-light">about us</a>
+					{{-- <a href="{{ route('contacts') }}" class="text-decoration-none text-light">Contact</a> --}}
 				</div>
 			</div>
 

@@ -131,6 +131,17 @@
 
 
                 </div>
+
+                {{-- Short Description --}}
+                <div>
+                    <p>
+                        {{ $item->short_description }}
+                    </p>
+                </div>
+                {{-- Short Description --}}
+
+
+
             </div>
 
 

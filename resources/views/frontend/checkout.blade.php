@@ -349,7 +349,8 @@
                         <h3 class="subsection-title">Billing & Shipping</h3>
                         <input type="text" class="form-control mb-3 p-4" id="name" placeholder="Full Name" required>
                         <input type="tel" class="form-control mb-3 p-4" id="phone" placeholder="Phone Number" required>
-                        <input type="text" class="form-control mb-3 p-4" id="address" placeholder="District, Upazila, Thana, Municipality" required>
+                        <input type="text" class="form-control mb-3 p-4" id="address"
+                            placeholder="District, Upazila, Thana, Municipality" required>
                     </div>
 
                     <!-- SHIPPING -->
@@ -369,7 +370,8 @@
                         <div class="d-flex flex-wrap gap-3">
                             <label class="payment-option d-flex align-items-center">
                                 <input type="radio" name="payment_method" value="cod" checked>
-                                <img src="https://d28wu8o6itv89t.cloudfront.net/images/Cashondeliveryjpgjpg-1594648666434.jpeg">
+                                <img
+                                    src="https://d28wu8o6itv89t.cloudfront.net/images/Cashondeliveryjpgjpg-1594648666434.jpeg">
                             </label>
 
                             @if(!empty($ssl->sslcz_store_id))
@@ -387,7 +389,8 @@
                         <span class="ms-2">I agree to Terms & Conditions.</span>
                     </label>
 
-                    <button id="place-order" class="btn btn-confirm-order w-100">Confirm Order <span id="grand-total1"></span></button>
+                    <button id="place-order" class="btn btn-confirm-order w-100">Confirm Order <span
+                            id="grand-total1"></span></button>
                 </div>
             </div>
 
@@ -483,88 +486,91 @@
         // PLACE ORDER
         // ---------------------------
         $('#place-order').click(function() {
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
-
-    // Clear previous errors
-    $('.error-text').remove();
-
-    // Collect form values
-    let customerName = $('#name').val().trim();
-    let phone = $('#phone').val().trim();
-    let address = $('#address').val().trim();
-    let deliveryArea = $('#delivery_area').val();
-    let paymentMethod = $('input[name="payment_method"]:checked').val();
-
-    let hasError = false;
-
-    // Validate fields
-    if (!customerName) {
-        $('#name').after('<small class="text-danger error-text">Name is required</small>');
-        hasError = true;
-    }
-    if (!phone) {
-        $('#phone').after('<small class="text-danger error-text">Phone is required</small>');
-        hasError = true;
-    }
-    if (!address) {
-        $('#address').after('<small class="text-danger error-text">Address is required</small>');
-        hasError = true;
-    }
-    if (!deliveryArea) {
-        $('#delivery_area').after('<small class="text-danger error-text">Please select delivery area</small>');
-        hasError = true;
-    }
-    if (!paymentMethod) {
-        $('input[name="payment_method"]').last().after('<small class="text-danger error-text">Select a payment method</small>');
-        hasError = true;
-    }
-
-    if (hasError) {
-        $('html, body').animate({ scrollTop: 0 }, 'fast'); // scroll to top to show errors
-        return; // stop submission
-    }
-
-    // Prepare order data
-    let orderData = {
-        customer_name: customerName,
-        phone: phone,
-        address: address,
-        delivery_area: deliveryArea,
-        delivery_charge: deliveryCharge,
-        payment_method: paymentMethod,
-        items: cart,
-        total: total + deliveryCharge,
-        _token: '{{ csrf_token() }}'
-    };
-
-    // COD
-    if (paymentMethod === 'cod') {
-        $.post("{{ route('order.store') }}", orderData, function(res) {
-            if (res.success) {
-                localStorage.removeItem('cart'); // clear cart
-                updateTotals(); // update totals immediately
-                window.location.href = `/success/${res.id}`;
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
             }
-        });
-    }
 
-    // SSL Commerz
-    if (paymentMethod === 'sslcommerz') {
-        let form = $('<form>', { method: 'POST', action: '{{ route("pay") }}' });
-        form.append(`<input type='hidden' name='_token' value='{{ csrf_token() }}'>`);
-        Object.keys(orderData).forEach(k => {
-            let val = (k === 'items') ? JSON.stringify(orderData[k]) : orderData[k];
-            form.append(`<input type='hidden' name='${k}' value='${val}'>`);
-        });
-        $('body').append(form);
-        form.submit();
-    }
-});
+            // Clear previous errors
+            $('.error-text').remove();
+
+            // Collect form values
+            let customerName = $('#name').val().trim();
+            let phone = $('#phone').val().trim();
+            let address = $('#address').val().trim();
+            let deliveryArea = $('#delivery_area').val();
+            let paymentMethod = $('input[name="payment_method"]:checked').val();
+
+            let hasError = false;
+
+            // Validate fields
+            if (!customerName) {
+                $('#name').after('<small class="text-danger error-text">Name is required</small>');
+                hasError = true;
+            }
+            if (!phone) {
+                $('#phone').after('<small class="text-danger error-text">Phone is required</small>');
+                hasError = true;
+            }
+            if (!address) {
+                $('#address').after('<small class="text-danger error-text">Address is required</small>');
+                hasError = true;
+            }
+            if (!deliveryArea) {
+                $('#delivery_area').after('<small class="text-danger error-text">Please select delivery area</small>');
+                hasError = true;
+            }
+            if (!paymentMethod) {
+                $('input[name="payment_method"]').last().after('<small class="text-danger error-text">Select a payment method</small>');
+                hasError = true;
+            }
+
+            if (hasError) {
+                $('html, body').animate({ scrollTop: 0 }, 'fast'); // scroll to top to show errors
+                return; // stop submission
+            }
+
+            // Prepare order data
+            let orderData = {
+                customer_name: customerName,
+                phone: phone,
+                address: address,
+                delivery_area: deliveryArea,
+                delivery_charge: deliveryCharge,
+                payment_method: paymentMethod,
+                items: cart,
+                total: total + deliveryCharge,
+                _token: '{{ csrf_token() }}'
+            };
+
+            // COD
+            if (paymentMethod === 'cod') {
+                $.post("{{ route('order.store') }}", orderData, function(res) {
+                    if (res.success) {
+                        localStorage.removeItem('cart'); // clear cart
+                        updateTotals(); // update totals immediately
+                        window.location.href = `/success/${res.id}`;
+                    }
+                });
+            }
 
 
+            // SSL Commerz
+            if(paymentMethod === 'sslcommerz'){
+            let form = $('<form>', { method: 'POST', action: '{{ route("pay") }}' });
+            form.append(`<input type='hidden' name='_token' value='{{ csrf_token() }}'>`);
+            Object.keys(orderData).forEach(k=>{
+                let val = (k === 'items') ? JSON.stringify(orderData[k]) : orderData[k];
+                form.append(`<input type='hidden' name='${k}' value='${val}'>`);
+            });
+            $('body').append(form);
+            form.submit();
+        }
+
+   
     });
+
+
+});
 </script>
 @endsection
