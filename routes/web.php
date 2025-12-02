@@ -98,4 +98,4 @@ require __DIR__.'/affiliate.php';
 
 
 
-// php artisan migrate:refresh --path=database/migrations/22025_10_05_153148_create_categories_table.php
+// php artisan migrate:refresh --path=database/migrations/2025_05_05_045024_create_settings_table.php

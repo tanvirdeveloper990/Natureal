@@ -40,6 +40,17 @@ return new class extends Migration
             $table->string('landing_status')->default(1);
             $table->string('currency')->nullable();
             $table->decimal('vendor_commission',10,2)->nullable();
+            $table->string('certificate')->nullable();
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->string('list_1')->nullable();
+            $table->string('list_2')->nullable();
+            $table->string('list_3')->nullable();
+            $table->string('list_4')->nullable();
+            $table->string('list_5')->nullable();
+            $table->string('list_6')->nullable();
+            $table->string('button_text')->nullable();
+            $table->string('button_link')->nullable();
             $table->timestamps();
         });
     }

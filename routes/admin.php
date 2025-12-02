@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Admin\AboutUsController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\AffiliatesController;
 use App\Http\Controllers\Admin\AffiliateWithdrawController;
@@ -10,17 +10,23 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CampingController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\CommissionLevelController;
+use App\Http\Controllers\Admin\CommonSectionController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CustomerReviewController;
+use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductCommisionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SellerCommissionController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SubSubCategoryController;
+use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VendorsController;
 use App\Http\Controllers\Admin\WebController;
@@ -176,6 +182,15 @@ Route::prefix('admin')
         Route::post('marketer-withdraw/{id}/status', [AffiliateWithdrawController::class, 'updateStatus'])->name('marketer-withdraw.updateStatus');
 
         Route::resource('campings',CampingController::class);
+
+
+        Route::resource('offers',OfferController::class);
+        Route::resource('about-us',AboutUsController::class);
+        Route::resource('common-section',CommonSectionController::class);
+        Route::resource('commission-level',CommissionLevelController::class);
+        Route::resource('seller-commision',SellerCommissionController::class);
+        Route::resource('teams',TeamController::class);
+        Route::resource('clients',ClientController::class);
 
 
 

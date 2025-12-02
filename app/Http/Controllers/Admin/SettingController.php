@@ -73,6 +73,7 @@ class SettingController extends Controller
         $favicon = $request->hasFile('favicon') ? ImageHelper::uploadImage($request->file('favicon')) : null;
         $meta_image = $request->hasFile('meta_image') ? ImageHelper::uploadImage($request->file('meta_image')) : null;
         $mobile_logo = $request->hasFile('mobile_logo') ? ImageHelper::uploadImage($request->file('mobile_logo')) : null;
+        $certificate = $request->hasFile('certificate') ? ImageHelper::uploadImage($request->file('certificate')) : null;
 
         
         if ($request->hasFile('header_logo') && $data->header_logo) {
@@ -89,6 +90,9 @@ class SettingController extends Controller
         }
         if ($request->hasFile('mobile_logo') && $data->mobile_logo) {
             Storage::disk('public')->delete($data->mobile_logo);
+        }
+        if ($request->hasFile('certificate') && $data->certificate) {
+            Storage::disk('public')->delete($data->certificate);
         }
         
         $input = $request->all();
@@ -111,6 +115,9 @@ class SettingController extends Controller
         }
         if($mobile_logo){
             $input['mobile_logo'] = $mobile_logo;
+        }
+        if($certificate){
+            $input['certificate'] = $certificate;
         }
         
         

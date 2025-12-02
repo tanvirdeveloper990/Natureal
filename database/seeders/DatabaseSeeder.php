@@ -265,6 +265,41 @@ class DatabaseSeeder extends Seeder
             'delete report',
 
 
+            // about permissions
+            'create about',
+            'edit about',
+            'view about',
+            'delete about',
+
+            // team permissions
+            'create team',
+            'edit team',
+            'view team',
+            'delete team',
+
+            // client permissions
+            'create client',
+            'edit client',
+            'view client',
+            'delete client',
+
+            // offer permissions
+            'create offer',
+            'edit offer',
+            'view offer',
+            'delete offer',
+
+            // common permissions
+            'create common',
+            'edit common',
+            'view common',
+            'delete common',
+
+            // commission permissions
+            'create commission',
+            'edit commission',
+            'view commission',
+            'delete commission',
 
 
         ];

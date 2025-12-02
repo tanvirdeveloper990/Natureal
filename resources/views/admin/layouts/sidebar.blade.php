@@ -138,10 +138,16 @@
         'create marketing','edit marketing','view marketing','delete marketing',
         'create payment','edit payment','view payment','delete payment',
         'create banner','edit banner','view banner','delete banner',
-        'create setting','edit setting','view setting','delete setting'
+        'create setting','edit setting','view setting','delete setting',
+        'create about','edit about','view about','delete about',
+        'create team','edit team','view team','delete team',
+        'create client','edit client','view client','delete client',
+        'create offer','edit offer','view offer','delete offer',
+        'create common','edit common','view common','delete common',
+        'create commission','edit commission','view commission','delete commission'
         ])
         @php
-        $websiteActive = request()->is('admin/coupons*') || request()->is('admin/smtp*') || request()->is('admin/courier*') || request()->is('admin/marketing*') || request()->is('admin/payment*') || request()->is('admin/bannars*') || request()->is('admin/settings*');
+        $websiteActive = request()->is('admin/coupons*')|| request()->is('admin/commission-level*')|| request()->is('admin/common-section*')|| request()->is('admin/commission-level*')|| request()->is('admin/offers*')|| request()->is('admin/abouts*')|| request()->is('admin/teams*') || request()->is('admin/clients*') || request()->is('admin/smtp*') || request()->is('admin/courier*') || request()->is('admin/marketing*') || request()->is('admin/payment*') || request()->is('admin/bannars*') || request()->is('admin/settings*');
         @endphp
         <li class="nav-item">
             <a class="nav-link d-flex justify-content-between align-items-center {{ $websiteActive ? '' : 'collapsed' }}"
@@ -183,6 +189,24 @@
 
                     @canany(['create setting','edit setting','view setting','delete setting'])
                     <li><a class="nav-link {{ request()->is('admin/settings*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">Settings</a></li>
+                    @endcanany
+                    @canany(['create about','edit about','view about','delete about'])
+                    <li><a class="nav-link {{ request()->is('admin/about-us*') ? 'active' : '' }}" href="{{ route('admin.about-us.index') }}">About US</a></li>
+                    @endcanany
+                    @canany(['create team','edit team','view team','delete team'])
+                    <li><a class="nav-link {{ request()->is('admin/teams*') ? 'active' : '' }}" href="{{ route('admin.teams.index') }}">Teams</a></li>
+                    @endcanany
+                    @canany(['create client','edit client','view client','delete client'])
+                    <li><a class="nav-link {{ request()->is('admin/clients*') ? 'active' : '' }}" href="{{ route('admin.clients.index') }}">Clients</a></li>
+                    @endcanany
+                    @canany(['create offer','edit offer','view offer','delete offer'])
+                    <li><a class="nav-link {{ request()->is('admin/offers*') ? 'active' : '' }}" href="{{ route('admin.offers.index') }}">Offer</a></li>
+                    @endcanany
+                    @canany(['create common','edit common','view common','delete common'])
+                    <li><a class="nav-link {{ request()->is('admin/common-section*') ? 'active' : '' }}" href="{{ route('admin.common-section.index') }}">Common Section</a></li>
+                    @endcanany
+                    @canany(['create commission','edit commission','view commission','delete commission'])
+                    <li><a class="nav-link {{ request()->is('admin/commission-level*') ? 'active' : '' }}" href="{{ route('admin.commission-level.index') }}">Seller Commision</a></li>
                     @endcanany
                 </ul>
             </div>
