@@ -1,165 +1,89 @@
 @extends('layouts.app')
 
-@section('title', 'Sellers Register')
+@section('title', 'All Sellers')
+
 @section('css')
-
+<!-- Extra CSS -->
+@push('css')
 <style>
-   
-    .seller-bg {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        background-image: url({{ asset('/assets/img/seller-register.png') }});
+    .seller-card {
+        transition: 0.3s;
+        border-radius: 10px;
     }
 
-    .seller-card{
-        background: rgba(255,255,255,0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 18px;
-        padding: 30px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    .seller-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
     }
 
-    .seller-title{
-        font-weight: 700;
-        color: #1e3c72;
-    }
-
-    .seller-sub{
-        color: #666;
-        font-size: 15px;
-    }
-
-    .btn-primary{
-        background: #1e3c72;
-        border:none;
-        border-radius:50px;
-        padding: 10px 25px;
-    }
-
-    .btn-primary:hover{
-        background:#162f5c;
-        transform: translateY(-1px);
+    .seller-logo {
+        width: 110px;
+        height: 110px;
+        object-fit: cover;
+        border: 4px solid #eee;
     }
 </style>
 @endsection
 
 @section('content')
 
-<div class="seller-bg py-5">
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
+<div class="container py-5">
 
-            <div class="seller-card">
-                <div class="text-center mb-4">
-                    <h2 class="seller-title">Become a Hostilica Seller</h2>
-                    <p class="seller-sub">Join our platform and start selling your service today 🚀</p>
+    <h2 class="mb-4 text-center font-weight-bold">All Sellers</h2>
+
+    <div class="text-center mb-4">
+        <a href="{{ route('seller.register') }}" class="btn btn-primary btn-lg font-weight-bold">
+            <i class="fa fa-store"></i> Become a Seller
+        </a>
+        <p class="mt-2 text-muted small">
+            Want to sell on our marketplace? Join now!
+        </p>
+    </div>
+
+    <div class="row">
+
+        @forelse ($sellers as $seller)
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-lg border-0 seller-card h-100">
+
+                <!-- Shop Logo -->
+                <div class="text-center p-3">
+                    <img src="{{ Storage::url($seller->logo) }}" alt="Shop Logo" class="img-fluid rounded-circle seller-logo">
                 </div>
 
-                <form action="#" method="POST" enctype="multipart/form-data" novalidate>
-                    @csrf
+                <div class="card-body text-center">
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Full Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="name" value="{{ old('name') }}" required>
-                        </div>
+                    <h5 class="card-title font-weight-bold mb-2">
+                        {{ $seller->shop_name }}
+                    </h5>
 
-                        <div class="form-group col-md-6">
-                            <label>Company / Shop Name</label>
-                            <input type="text" class="form-control" name="company" value="{{ old('company') }}">
-                        </div>
-                    </div>
+                    <p class="mb-1">
+                        <i class="fa fa-phone text-success"></i>
+                        {{ $seller->phone }}
+                    </p>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-                        </div>
+                    <p class="text-muted mb-3">
+                        <i class="fa fa-map-marker-alt text-danger"></i>
+                        {{ $seller->address }}
+                    </p>
 
-                        <div class="form-group col-md-6">
-                            <label>Phone <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="phone" value="{{ old('phone') }}" required>
-                        </div>
-                    </div>
+                    <a href="{{ route('seller.show', $seller->shop_slug) }}" class="btn btn-primary btn-sm px-4">
+                        View Details
+                    </a>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Password <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <input type="password" id="password" class="form-control" name="password" required>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">Show</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label>Confirm Password</label>
-                            <input type="password" class="form-control" name="password_confirmation" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Business Type</label>
-                        <select class="custom-select" name="business_type">
-                            <option>Select One</option>
-                            <option>Individual</option>
-                            <option>Company</option>
-                            <option>Marketplace</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Business Address</label>
-                        <textarea class="form-control" name="address" rows="2"></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Tax ID / Trade License</label>
-                            <input type="text" class="form-control" name="tax_id">
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label>Website</label>
-                            <input type="url" class="form-control" name="website">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Upload Logo</label>
-                            <input type="file" class="form-control-file" id="logo" name="logo">
-                            <img id="logoPreview" style="max-height:100px;margin-top:10px;display:none;">
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label>Business Documents (PDF)</label>
-                            <input type="file" class="form-control-file" name="documents[]" multiple>
-                        </div>
-                    </div>
-
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" required>
-                        <label class="form-check-label">I agree with Terms & Conditions</label>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">Already have an account? <a href="#">Login</a></small>
-                        <button type="submit" class="btn btn-primary">
-                            Register as Seller
-                        </button>
-                    </div>
-
-                </form>
+                </div>
             </div>
-
         </div>
+        @empty
+
+        <div class="col-12 text-center py-5">
+            <h5 class="text-muted">No sellers found.</h5>
+        </div>
+
+        @endforelse
+
     </div>
 </div>
-</div>
-
 
 @endsection

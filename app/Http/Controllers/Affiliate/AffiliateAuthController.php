@@ -77,6 +77,6 @@ class AffiliateAuthController extends Controller
     public function logout()
     {
         Auth::guard('affiliate')->logout();
-        return redirect()->route('affiliate.login');
+        return redirect('/');
     }
 }

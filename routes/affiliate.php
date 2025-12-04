@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 
 
-// Affiliate Registration & Login
-Route::get('affiliate/register', [AffiliateAuthController::class, 'showRegister'])->name('affiliate.register');
-Route::post('affiliate/register', [AffiliateAuthController::class, 'register'])->name('affiliate.register.submit');
+// // Affiliate Registration & Login
+// Route::get('affiliate/register', [AffiliateAuthController::class, 'showRegister'])->name('affiliate.register');
+// Route::post('affiliate/register', [AffiliateAuthController::class, 'register'])->name('affiliate.register.submit');
 
 // Affiliate Dashboard
 Route::prefix('affiliate')->name('affiliate.')->group(function () {
