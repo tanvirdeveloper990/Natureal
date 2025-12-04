@@ -7,7 +7,7 @@
     {{-- Card Wrapper --}}
     <div class="card shadow-lg rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-gradient-purple text-white">
-            <h5 class="mb-0">Common Section List</h5>
+            <h5 class="mb-0">Certificated/Programe/New Entrepreneur Section List</h5>
             <a href="{{ route('admin.common-section.create') }}" class="btn btn-light btn-sm">
                 <i class="fa fa-plus me-1"></i> Add 
             </a>

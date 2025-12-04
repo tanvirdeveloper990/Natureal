@@ -75,7 +75,7 @@
                     @if($item->variants->pluck('color_id')->filter()->count() > 0)
                     <div class="mb-2">
                         <label>Color:</label>
-                        <select id="variant-color" class="form-select">
+                        <select id="variant-color" class="form-select form-control w-lg-25 w-100">
                             @foreach($item->variants->whereNotNull('color_id')->unique('color_id') as $variant)
                             <option value="{{ $variant->id }}" data-price="{{ $variant->price }}" data-stock="{{ $variant->stock }}" data-color="{{ $variant->color->name ?? '' }}" data-size="{{ $variant->size?->name ?? '' }}">
                                 {{ $variant->color->name ?? 'N/A' }}
@@ -88,7 +88,7 @@
                     @if($item->variants->pluck('size_id')->filter()->count() > 0)
                     <div class="mb-2">
                         <label>Size:</label>
-                        <select id="variant-size" class="form-select">
+                        <select id="variant-size" class="form-select form-control w-lg-25 w-100">
                             @foreach($item->variants->whereNotNull('size_id')->unique('size_id') as $variant)
                             <option value="{{ $variant->id }}" data-price="{{ $variant->price }}" data-stock="{{ $variant->stock }}" data-color="{{ $variant->color?->name ?? '' }}" data-size="{{ $variant->size->name }}">
                                 {{ $variant->size->name ?? 'N/A' }}
@@ -122,6 +122,7 @@
                         data-name="{{ $item->name }}"
                         data-slug="{{ $item->slug }}"
                         data-image="{{ Storage::url($item->featured_image_1) }}"
+                        data-affiliate-id="{{ $affiliate ? $affiliate->id : '' }}"
                         data-price="{{ $item->sale_price }}"
                         style="background-color:#00c753;color:#fff;padding:0 30px;line-height:42px;font-size:13px;text-transform:uppercase;border:1px solid #00c753;border-radius:5px;">
                         <i class="fas fa-shopping-cart cart-icon me-2 text-light"></i> ADD TO CART
@@ -134,9 +135,7 @@
 
                 {{-- Short Description --}}
                 <div>
-                    <p>
-                        {{ $item->short_description }}
-                    </p>
+                    {!! $item->short_description !!}
                 </div>
                 {{-- Short Description --}}
 
@@ -249,6 +248,57 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+
+<div class="container mt-4">
+    <h2 class="border-bottom font-weight-bold mb-4 py-3 rounded section-title text-left text-success">
+       Related Products
+    </h2>
+     <div class="row g-4">
+        @foreach ($relatedProducts as $product)
+        <div class="col-lg-3 col-6">
+            <div class="product-card mb-3">
+                <div class="position-relative">
+                    <img src="{{ Storage::url($product->featured_image_1) }}" alt="Product Image" class="product-img">
+                    <img src="{{ Storage::url($product->featured_image_2) }}" alt="Hover Image" class="product-img-hover">
+                </div>
+                <div class="product-info text-left">
+                    <h5 class="product-title">
+                        <a href="{{ route('product.single',$product->slug) }}" class="text-dark">{{ $product->name }}</a>
+                    </h5>
+                    <p class="product-grams">{{ $product->unit }}</p>
+                    <div class="d-none d-lg-block">
+                        <div class="d-flex justify-content-between">
+                            <span class="product-price">{{currency()}} {{ number_format($product->sale_price, 2) }}</span>
+                            <span class="rating"><i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i> {{ $product->reviews_count }}</span>
+                        </div>
+                    </div>
+                    <div class="d-block d-lg-none">
+                        <span class="rating d-block"><i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i> {{ $product->reviews_count }}</span>
+                        <span class="product-price d-block">{{currency()}} {{ number_format($product->sale_price, 2) }}</span>
+                    </div>
+                    <button class="btn-cart mb-2 mt-lg-5 order-now" data-id="{{ $product->id }}"
+                        data-name="{{ $product->name }}"
+                        data-slug="{{ $product->slug }}"
+                        data-image="{{ Storage::url($product->featured_image_1) }}"
+                        data-price="{{ $product->sale_price }}"
+                        data-has-variant="{{ $product->variants->count() > 0 ? '1' : '0' }}">
+                        <span class="cart-icon"><i class="fas fa-shopping-cart"></i></span> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        @endforeach
     </div>
 </div>
 

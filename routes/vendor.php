@@ -14,7 +14,7 @@ use App\Http\Controllers\Vendor\VendorController;
 
 // Vendor
 Route::prefix('vendor')->name('vendor.')->group(function () {
-    Route::get('login', [VendorLoginController::class, 'showLoginForm'])->name('login');
+    // Route::get('login', [VendorLoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [VendorLoginController::class, 'login'])->name('login.submit');
     Route::post('logout', [VendorLoginController::class, 'logout'])->name('logout');
 

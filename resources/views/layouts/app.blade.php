@@ -3,6 +3,7 @@ $setting = \App\Models\Setting::first();
 $categories = \App\Models\Category::all();
 $facebook = \App\Models\Facebook::first();
 $google = \App\Models\Google::first();
+$offer = \App\Models\Offer::first();
 $tagmanager = \App\Models\TagManager::first();
 @endphp
 <!DOCTYPE html>
@@ -13,7 +14,8 @@ $tagmanager = \App\Models\TagManager::first();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
-    <link rel="icon" type="image/png" href="{{ $setting->favicon ? Storage::url($setting->favicon) : asset('/assets/img/null.png') }}">
+    <link rel="icon" type="image/png"
+        href="{{ $setting->favicon ? Storage::url($setting->favicon) : asset('/assets/img/null.png') }}">
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -94,8 +96,8 @@ $tagmanager = \App\Models\TagManager::first();
 
     {{-- ✅ Google Tag Manager (Body) --}}
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id={{$tagmanager->tag_id}}"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        <iframe src="https://www.googletagmanager.com/ns.html?id={{$tagmanager->tag_id}}" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
     </noscript>
 
     @include('layouts.header')
@@ -120,13 +122,206 @@ $tagmanager = \App\Models\TagManager::first();
     </div>
 
 
+
+    <!-- Offer Modal -->
+    <div class="modal fade" id="offerModal" tabindex="-1" role="dialog" aria-labelledby="offerModalLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded-lg shadow-lg">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-primary" id="offerModalLabel">{{ $offer->offer_title }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="{{ Storage::url($offer->offer_image) }}" class="img-fluid mb-3"
+                        alt="{{ $offer->offer_title }}">
+                    <h4>{{ $offer->offer_description_1 }}</h4>
+                    <p class="text-muted">{{ $offer->offer_description_2 }}</p>
+                    <a href="{{ $offer->offer_button_link }}" class="btn btn-primary btn-lg mt-3">{{
+                        $offer->offer_button_text }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Live chat launcher -->
+    <div class="live-chat-launcher">
+        <div class="chat-label">Need help? Chat with us</div>
+
+        <div class="chat-bubble" id="chat-toggle" aria-label="Open live chat" role="button" tabindex="0">
+            <!-- Using Font Awesome arrow-up as requested -->
+            <i class="fa fa-arrow-up" style="transform: rotate(45deg); font-size:22px;"></i>
+            <span class="badge" id="unread-badge">2</span>
+        </div>
+    </div>
+
+    <!-- Chat window -->
+    <div class="live-chat-window fade-in" id="liveChatWindow" role="dialog" aria-hidden="true"
+        aria-labelledby="chatTitle">
+        <div class="live-chat-header">
+            <img src="https://i.pravatar.cc/100?img=12" alt="Agent">
+            <div>
+                <div id="chatTitle" class="meta">Support Team</div>
+                <div class="sub">Usually replies within a few minutes</div>
+            </div>
+
+            <!-- optional minimized/close -->
+            <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+                <button class="small-action" id="open-whatsapp" title="Open WhatsApp (optional)">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+                <button class="small-action" id="close-chat" aria-label="Close chat">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="live-chat-messages" id="messages" aria-live="polite">
+            <!-- sample messages -->
+            <div class="msg agent">
+                <div class="bubble">হ্যালো! কিভাবে সাহায্য করতে পারি?</div>
+            </div>
+            <div class="msg user">
+                <div class="bubble">আমি পণ্যের বিষয়ে জানতে চাই।</div>
+            </div>
+            <div class="msg agent">
+                <div class="bubble">অবশ্যই — কোন পণ্যটি দেখতে চান?</div>
+            </div>
+        </div>
+
+        <div class="live-chat-input">
+            <input id="chatInput" type="text" placeholder="আপনার বার্তা লিখুন..." aria-label="Type your message">
+            <button class="btn-send" id="sendBtn" title="Send message">
+                <!-- arrow-up used here too for send -->
+                <i class="fa fa-arrow-up" style="transform: rotate(-45deg);"></i>
+            </button>
+        </div>
+    </div>
+
+
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 5 সেকেন্ড পরে modal open হবে
+            setTimeout(function() {
+                $('#offerModal').modal({
+                backdrop: 'static', // backdrop click করলে close হবে না
+                keyboard: false     // ESC key চাপলেও close হবে না
+                });
+                $('#offerModal').modal('show');
+            }, 5000);
 
+            // শুধু close button এ click করলে modal hide হবে
+            document.querySelector('#offerModal .close').addEventListener('click', function() {
+                $('#offerModal').modal('hide');
+            });
+            });
+    </script> --}}
+
+
+    <script>
+        // Elements
+  const chatToggle = document.getElementById('chat-toggle');
+  const chatWindow = document.getElementById('liveChatWindow');
+  const closeBtn = document.getElementById('close-chat');
+  const sendBtn = document.getElementById('sendBtn');
+  const input = document.getElementById('chatInput');
+  const messagesEl = document.getElementById('messages');
+  const unreadBadge = document.getElementById('unread-badge');
+  const openWhatsappBtn = document.getElementById('open-whatsapp');
+
+  // Sample WhatsApp number - change to your number in international format without +
+  const WHATSAPP_NUMBER = 'YOUR_WHATSAPP_NUMBER'; // e.g. 8801729345196
+
+  // Toggle open/close
+  function openChat() {
+    chatWindow.style.display = 'flex';
+    chatWindow.setAttribute('aria-hidden','false');
+    unreadBadge.style.display = 'none';
+    scrollToBottom();
+  }
+  function closeChat() {
+    chatWindow.style.display = 'none';
+    chatWindow.setAttribute('aria-hidden','true');
+  }
+
+  chatToggle.addEventListener('click', openChat);
+  chatToggle.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') openChat(); });
+  closeBtn.addEventListener('click', closeChat);
+
+  // Send message (local demo)
+  function appendMessage(text, who='user') {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'msg ' + (who === 'agent' ? 'agent' : 'user');
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerText = text;
+    wrapper.appendChild(bubble);
+    messagesEl.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  sendBtn.addEventListener('click', () => {
+    const txt = input.value.trim();
+    if (!txt) return;
+    appendMessage(txt, 'user');
+    input.value = '';
+    // Simulate agent reply after 700ms
+    setTimeout(() => {
+      appendMessage('ধন্যবাদ— আমরা শীঘ্রই উত্তর দিচ্ছি।', 'agent');
+    }, 700);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendBtn.click();
+    }
+  });
+
+  function scrollToBottom(){
+    messagesEl.scrollTop = messagesEl.scrollHeight + 200;
+  }
+
+  // Option: open WhatsApp chat in new tab (or behind the scenes)
+  openWhatsappBtn.addEventListener('click', () => {
+    if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER === 'YOUR_WHATSAPP_NUMBER') {
+      // fallback: open whatsapp web homepage
+      window.open('https://web.whatsapp.com/', '_blank');
+      return;
+    }
+    const url = `https://wa.me/${WHATSAPP_NUMBER}`;
+    window.open(url, '_blank');
+  });
+
+  // Small: clicking outside chat window closes it (nice behavior)
+  document.addEventListener('click', (e) => {
+    const isLauncher = chatToggle.contains(e.target);
+    const isWindow = chatWindow.contains(e.target);
+    if (!isLauncher && !isWindow) {
+      // don't auto-close if chat window is visible? keep it simple: close
+      // comment next line if you prefer it to stay open
+      // closeChat();
+    }
+  });
+
+  // Accessibility: close with ESC
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeChat(); });
+
+  // initial unread indicator behaviour (demo)
+  setTimeout(() => {
+    // you can set unread count dynamically via unreadBadge.innerText = '3'
+    unreadBadge.style.display = 'flex';
+  }, 900);
+    </script>
 
     <script>
         document.getElementById("goTopBtn").addEventListener("click", function() {
@@ -143,6 +338,19 @@ $tagmanager = \App\Models\TagManager::first();
             position: 'top-end',
             icon: 'success',
             title: "{{ session('success') }}",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+    </script>
+    @endif
+     @if(session('error'))
+    <script>
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: "{{ session('error') }}",
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true
@@ -519,7 +727,7 @@ $tagmanager = \App\Models\TagManager::first();
     </script>
 
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             // Add to Cart Button Click Event for both 'order-now' and 'order-now-new'
             $(document).on('click', '.order-now, .order-now-new', function(e) {
@@ -532,6 +740,7 @@ $tagmanager = \App\Models\TagManager::first();
                 var price = parseFloat($(this).data("price"));
                 var slug = $(this).data("slug");
                 var quantity = parseInt($('#qty').val()) || 1; // Get quantity from input (default to 1 if empty)
+                var affiliateId = $(this).data('affiliate-id'); // Affiliate ID from the button
 
                 // Get the current cart from localStorage or initialize it
                 var cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -551,7 +760,8 @@ $tagmanager = \App\Models\TagManager::first();
                         image: image,
                         price: price,
                         quantity: quantity,
-                        slug: slug
+                        slug: slug,
+                        affiliateId: affiliateId // Add affiliate ID to the cart item
                     });
                     toastr.success(name + " added to cart!");
                 }
@@ -651,7 +861,178 @@ $tagmanager = \App\Models\TagManager::first();
             // Initial load - Render cart
             updateCart();
         });
-    </script>
+    </script> --}}
+
+    <script>
+$(document).ready(function() {
+
+    // ====== Update Variant Info ======
+    function updateVariant() {
+        var colorOpt = $('#variant-color option:selected');
+        var sizeOpt = $('#variant-size option:selected');
+
+        var basePrice = parseFloat($('#variant-price').data('base-price')) || 0;
+        var price = parseFloat(sizeOpt.data('price') || colorOpt.data('price') || basePrice);
+        var stock = parseInt(sizeOpt.data('stock') || colorOpt.data('stock') || parseInt($('#variant-stock').text()) || 100);
+        var colorName = colorOpt.data('color') || '';
+        var sizeName = sizeOpt.data('size') || '';
+
+        $('#variant-price').text(price.toFixed(2));
+        $('#variant-stock').text(stock);
+        $('#qty').val(Math.min(parseInt($('#qty').val()) || 1, stock));
+    }
+
+    // ====== Variant change event ======
+    $('#variant-color, #variant-size').on('change', updateVariant);
+
+    // ====== Quantity buttons ======
+    $('#increment').click(function() {
+        var stock = parseInt($('#variant-stock').text()) || 100;
+        var val = parseInt($('#qty').val()) || 1;
+        if(val < stock) $('#qty').val(val + 1);
+    });
+    $('#decrement').click(function() {
+        var val = parseInt($('#qty').val()) || 1;
+        if(val > 1) $('#qty').val(val - 1);
+    });
+    $('#qty').on('input', function() {
+        var stock = parseInt($('#variant-stock').text()) || 100;
+        var val = parseInt($(this).val()) || 1;
+        if(val < 1) $(this).val(1);
+        if(val > stock) $(this).val(stock);
+    });
+
+    // ====== Add to Cart Click Event ======
+    $(document).on('click', '.order-now, .order-now-new', function(e) {
+        e.preventDefault();
+
+        var button = $(this);
+        var productId = button.data('id');
+        var name = button.data('name');
+        var slug = button.data('slug');
+        var image = button.data('image');
+        var affiliateId = button.data('affiliate-id') || null;
+
+        // Variant info
+        var colorOpt = $('#variant-color option:selected');
+        var sizeOpt = $('#variant-size option:selected');
+
+        var price = parseFloat(sizeOpt.data('price') || colorOpt.data('price') || button.data('price')) || 0;
+        var stock = parseInt(sizeOpt.data('stock') || colorOpt.data('stock') || 100);
+        var color = colorOpt.length ? colorOpt.text() : '';
+        var size = sizeOpt.length ? sizeOpt.text() : '';
+
+        var quantity = parseInt($('#qty').val()) || 1;
+        if(quantity > stock) {
+            toastr.error("Quantity exceeds stock!");
+            return;
+        }
+
+        // Get cart from localStorage
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Check if product with same variant already exists
+        var existing = cart.find(item => item.productId == productId && item.color == color && item.size == size);
+
+        if(existing) {
+            existing.quantity += quantity;
+            if(existing.quantity > stock) existing.quantity = stock;
+            toastr.success(name + " quantity updated!");
+        } else {
+            cart.push({
+                productId: productId,
+                name: name,
+                slug: slug,
+                image: image,
+                price: price,
+                quantity: quantity,
+                color: color,
+                size: size,
+                affiliateId: affiliateId
+            });
+            toastr.success(name + " added to cart!");
+        }
+
+        // Save cart
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Update cart UI
+        updateCartUI();
+    });
+
+    // ====== Update Cart UI ======
+    function updateCartUI() {
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+        var cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+        var cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        $('#cartCount').text(cartCount);
+        $('#cartCountMobile').text(cartCount);
+        $('#rightArrowCount').text(cartCount);
+        $('#cartTotal').text(cartTotal.toFixed(2));
+
+        var html = '';
+        cart.forEach(function(item) {
+            html += `
+            <div class="cart-item d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    <img src="${item.image}" class="cart-item-img me-2" style="width:50px;height:50px;">
+                    <div>
+                        <p class="mb-0">${item.name} ${item.color ? '('+item.color+')' : ''} ${item.size ? '('+item.size+')' : ''}</p>
+                        <small>Price: ${item.price.toFixed(2)} x ${item.quantity}</small>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-secondary increment" data-id="${item.productId}">+</button>
+                    <button class="btn btn-sm btn-secondary decrement" data-id="${item.productId}">-</button>
+                    <button class="btn btn-sm btn-danger remove-item" data-id="${item.productId}">x</button>
+                </div>
+            </div>`;
+        });
+        $('#cart-items').html(html);
+
+        if(cartCount > 0) $('#cart-details').removeClass('d-none');
+        else $('#cart-details').addClass('d-none');
+    }
+
+    // ====== Increment / Decrement / Remove Item ======
+    $(document).on('click', '.increment', function() {
+        var productId = $(this).data('id');
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+        var item = cart.find(x => x.productId == productId);
+        if(item) {
+            item.quantity++;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+    });
+
+    $(document).on('click', '.decrement', function() {
+        var productId = $(this).data('id');
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+        var item = cart.find(x => x.productId == productId);
+        if(item) {
+            if(item.quantity > 1) item.quantity--;
+            else cart = cart.filter(x => x.productId != productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+    });
+
+    $(document).on('click', '.remove-item', function() {
+        var productId = $(this).data('id');
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = cart.filter(x => x.productId != productId);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        toastr.success("Item removed from cart");
+        updateCartUI();
+    });
+
+    // Initial render
+    updateCartUI();
+});
+</script>
+
 
     @yield('script')
 

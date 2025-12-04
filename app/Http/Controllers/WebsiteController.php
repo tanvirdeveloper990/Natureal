@@ -2,20 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageHelper;
+use App\Models\AboutUS;
 use App\Models\Affiliate;
 use App\Models\Bannar;
 use App\Models\Blog;
+use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Client;
+use App\Models\CommissionLevel;
+use App\Models\CommonSection;
 use App\Models\Coupon;
 use App\Models\CustomerContact;
 use App\Models\CustomerReview;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\SellerCommission;
 use App\Models\Setting;
 use App\Models\SslCommerc;
+use App\Models\Team;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -38,17 +47,141 @@ class WebsiteController extends Controller
         $banner = Bannar::first();
         $customer_reviews = CustomerReview::where('status', 1)->latest()->get();
         $blogs = Blog::where('status', 1)->latest()->get();
-        return view('frontend.index', compact('customer_reviews', 'blogs', 'setting', 'categories', 'is_new', 'is_popular', 'is_featured', 'banner'));
+        $approved_certificated = CommonSection::where('status',1)->where('type','Approved & Certified')->get();
+        $seller_progamer = CommonSection::where('status',1)->where('type','Seller Program')->get();
+        $new_enterprenure = CommonSection::where('status',1)->where('type','New entrepreneurs')->get();
+        $brands = Brand::where('status',1)->get();
+        $commission_level = CommissionLevel::where('status',1)->get();
+        return view('frontend.index', compact('commission_level','brands','new_enterprenure','seller_progamer','approved_certificated','customer_reviews', 'blogs', 'setting', 'categories', 'is_new', 'is_popular', 'is_featured', 'banner'));
     }
 
     public function about()
     {
-        return view('frontend.about');
+        $data = AboutUS::first();
+        $teams = Team::where('status',1)->get();
+        $clients = Client::where('status',1)->get();
+        return view('frontend.about',compact('data','teams','clients'));
     }
     public function sellers()
     {
-        return view('frontend.sellers');
+        $sellers = Vendor::where('status',1)->latest()->get();
+        return view('frontend.sellers',compact('sellers'));
     }
+    public function shop($slug)
+    {
+        $sellers = Vendor::where('shop_slug',$slug)->first();
+        return view('frontend.sellers-shop',compact('sellers'));
+    }
+
+    public function affiliateRegister()
+    {
+        return view('affiliate.register');
+    }
+    public function affiliateLogin()
+    {
+        return view('affiliate.login');
+    }
+    
+
+      // Store affiliate registration
+    public function storeaffiliate(Request $request)
+    {
+        $request->validate([
+            'fname' => 'required|string|max:255',
+            'lname' => 'required|string|max:255',
+            'email' => 'required|email|unique:affiliates,email',
+            'phone' => 'required|string|unique:affiliates,phone',
+            'username' => 'required|string|unique:affiliates,username',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $affiliate = Affiliate::create([
+            'fname' => $request->fname,
+            'lname' => $request->lname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'website_url' => $request->website_url,
+            'social_media_link' => $request->social_media_link,
+            'promotion_method' => $request->promotion_method,
+            'referal_name_id' => $request->referal_name_id,
+            'status' => 'pending', // default
+        ]);
+
+        return redirect()->back()->with('success', 'Registration successful! Your account is pending approval.');
+    }
+
+
+    public function sellerRegister()
+    {
+        return view('frontend.seller-register');
+    }
+    public function sellerLogin()
+    {
+        return view('frontend.seller-login');
+    }
+    
+
+      // Store seller registration
+    public function storeSeller(Request $request)
+    {
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'shop_name'   => 'required|string|max:255|unique:vendors,shop_name',
+            'email'       => 'required|email|unique:vendors,email',
+            'phone'       => 'required|string|max:20|unique:vendors,phone',
+            'password'    => 'required|min:6|confirmed',
+            'address'     => 'nullable|string',
+            'city'        => 'nullable|string|max:100',
+            'country'     => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
+            'description' => 'nullable|string|max:500',
+
+            'logo'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'banner'      => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+        ]);
+
+        // Generate shop slug
+        $shop_slug = Str::slug($request->shop_name);
+
+        // Ensure slug is unique
+        $originalSlug = $shop_slug;
+        $counter = 1;
+        while (Vendor::where('shop_slug', $shop_slug)->exists()) {
+            $shop_slug = $originalSlug . '-' . $counter++;
+        }
+
+        // Upload images using ImageHelper
+        $logo = $request->hasFile('logo')
+            ? ImageHelper::uploadImage($request->file('logo'))
+            : null;
+
+        $banner = $request->hasFile('banner')
+            ? ImageHelper::uploadImage($request->file('banner'))
+            : null;
+
+        // Save seller
+        Vendor::create([
+            'name'        => $request->name,
+            'shop_name'   => $request->shop_name,
+            'shop_slug'   => $shop_slug,
+            'email'       => $request->email,
+            'phone'       => $request->phone,
+            'password'    => Hash::make($request->password),
+            'address'     => $request->address,
+            'city'        => $request->city,
+            'country'     => $request->country,
+            'postal_code' => $request->postal_code,
+            'description' => $request->description,
+            'logo'        => $logo,
+            'banner'      => $banner,
+            'status'      => 'inactive',
+        ]);
+
+        return back()->with('success', 'Seller Registration Successful! & Waiting for Approval');
+    }
+
 
 
     public function products(Request $request)

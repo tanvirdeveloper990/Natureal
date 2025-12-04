@@ -29,6 +29,18 @@ Route::get('/cmd', function () {
 Route::get('/', [WebsiteController::class, 'index'])->name('index');
 Route::get('/about', [WebsiteController::class, 'about'])->name('about');
 Route::get('/sellers', [WebsiteController::class, 'sellers'])->name('sellers');
+Route::get('/seller/{slug}', [WebsiteController::class, 'shop'])->name('seller.show');
+Route::get('/seller-register', [WebsiteController::class, 'sellerRegister'])->name('seller.register');
+Route::get('/seller-login', [WebsiteController::class, 'sellerLogin'])->name('seller.login');
+Route::post('/seller/register', [WebsiteController::class, 'storeSeller'])->name('seller.register.store');
+
+
+Route::get('/affiliate-register', [WebsiteController::class, 'affiliateRegister'])->name('affiliate.register');
+Route::get('/affiliate-login', [WebsiteController::class, 'affiliateLogin'])->name('affiliate.login');
+Route::post('/affiliate/register', [WebsiteController::class, 'storeaffiliate'])->name('affiliate.register.store');
+
+
+
 Route::get('/products', [WebsiteController::class, 'products'])->name('products');
 Route::get('/product/{slug}', [WebsiteController::class, 'productSingle'])->name('product.single');
 Route::get('/blogs/{slug}', [WebsiteController::class, 'singleBlog'])->name('blogs-single');

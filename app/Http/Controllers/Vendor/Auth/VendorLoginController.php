@@ -27,7 +27,7 @@ class VendorLoginController extends Controller
             $vendor = Auth::guard('vendor')->user();
             if ($vendor->status !== 'active') {
                 Auth::guard('vendor')->logout();
-                return redirect()->back()->with('message', 'Your account is not active yet.');
+                return redirect()->back()->with('error', 'Your account is not active yet.');
             }
             return redirect()->route('vendor.dashboard');
         }
@@ -40,6 +40,6 @@ class VendorLoginController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('vendor')->logout();
-        return redirect()->route('vendor.login');
+        return redirect('/');
     }
 }

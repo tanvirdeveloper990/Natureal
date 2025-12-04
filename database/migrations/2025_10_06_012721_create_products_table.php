@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('sub_sub_category_id')->nullable()->constrained()->onDelete('set null');
             $table->string('name');
             $table->string('slug')->unique();
+            $table->longText('short_description')->nullable();
             $table->longText('description')->nullable();
             $table->decimal('purchase_price', 10, 2);
             $table->decimal('regular_price', 10, 2);
