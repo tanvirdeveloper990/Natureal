@@ -147,7 +147,7 @@
         'create commission','edit commission','view commission','delete commission'
         ])
         @php
-        $websiteActive = request()->is('admin/coupons*')|| request()->is('admin/commission-level*')|| request()->is('admin/common-section*')|| request()->is('admin/commission-level*')|| request()->is('admin/offers*')|| request()->is('admin/abouts*')|| request()->is('admin/teams*') || request()->is('admin/clients*') || request()->is('admin/smtp*') || request()->is('admin/courier*') || request()->is('admin/marketing*') || request()->is('admin/payment*') || request()->is('admin/bannars*') || request()->is('admin/settings*');
+        $websiteActive = request()->is('admin.coupons*')|| request()->is('admin.commission-level*')|| request()->is('admin.common-section*')|| request()->is('admin.commission-level*')|| request()->is('admin.offers*')|| request()->is('admin.abouts*')|| request()->is('admin.teams*') || request()->is('admin.clients*') || request()->is('admin.smtp*') || request()->is('admin.courier*') || request()->is('admin.marketing*') || request()->is('admin.payment*') || request()->is('admin.bannars*') || request()->is('admin.settings*');
         @endphp
         <li class="nav-item">
             <a class="nav-link d-flex justify-content-between align-items-center {{ $websiteActive ? '' : 'collapsed' }}"
@@ -158,55 +158,58 @@
             <div class="collapse {{ $websiteActive ? 'show' : '' }}" id="websiteMenu">
                 <ul class="nav flex-column ms-3">
                     @canany(['create coupon','edit coupon','view coupon','delete coupon'])
-                    <li><a class="nav-link {{ request()->is('admin/coupons*') ? 'active' : '' }}" href="{{ route('admin.coupons.index') }}">Coupons</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.coupons*') ? 'active' : '' }}" href="{{ route('admin.coupons.index') }}">Coupons</a></li>
                     @endcanany
 
                     @canany(['create smtp','edit smtp','view smtp','delete smtp'])
-                    <li><a class="nav-link {{ request()->is('admin/smtp*') ? 'active' : '' }}" href="{{ route('admin.smtp.edit',1) }}">SMTP</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.smtp*') ? 'active' : '' }}" href="{{ route('admin.smtp.edit',1) }}">SMTP</a></li>
                     @endcanany
 
                     @canany(['create courier','edit courier','view courier','delete courier'])
-                    <li><a class="nav-link {{ request()->is('admin/courier*') ? 'active' : '' }}" href="{{ route('admin.courier.setup') }}">Courier Setup</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.courier*') ? 'active' : '' }}" href="{{ route('admin.courier.setup') }}">Courier Setup</a></li>
                     @endcanany
 
                     @canany(['create marketing','edit marketing','view marketing','delete marketing'])
-                    <li><a class="nav-link {{ request()->is('admin/marketing*') ? 'active' : '' }}" href="{{ route('admin.marketing.setup') }}">Marketing</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.marketing*') ? 'active' : '' }}" href="{{ route('admin.marketing.setup') }}">Marketing</a></li>
                     @endcanany
 
                     @canany(['create payment','edit payment','view payment','delete payment'])
-                    <li><a class="nav-link {{ request()->is('admin/payment*') ? 'active' : '' }}" href="{{ route('admin.payment.setup') }}">Payment Method</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.payment*') ? 'active' : '' }}" href="{{ route('admin.payment.setup') }}">Payment Method</a></li>
                     @endcanany
 
                     @canany(['create banner','edit banner','view banner','delete banner'])
-                    <li><a class="nav-link {{ request()->is('admin/bannars*') ? 'active' : '' }}" href="{{ route('admin.bannars.index') }}">Banners</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.bannars*') ? 'active' : '' }}" href="{{ route('admin.bannars.index') }}">Banners</a></li>
                     @endcanany
                     @canany(['create banner','edit banner','view banner','delete banner'])
-                    <li><a class="nav-link {{ request()->is('admin/blogs*') ? 'active' : '' }}" href="{{ route('admin.blogs.index') }}">Blogs</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.blogs*') ? 'active' : '' }}" href="{{ route('admin.blogs.index') }}">Blogs</a></li>
                     @endcanany
                     @canany(['create banner','edit banner','view banner','delete banner'])
-                    <li><a class="nav-link {{ request()->is('admin/customer-review*') ? 'active' : '' }}" href="{{ route('admin.customer-review.index') }}">Customer Review</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.customer-review*') ? 'active' : '' }}" href="{{ route('admin.customer-review.index') }}">Customer Review</a></li>
                     @endcanany
 
                     @canany(['create setting','edit setting','view setting','delete setting'])
-                    <li><a class="nav-link {{ request()->is('admin/settings*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">Settings</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.settings*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">Settings</a></li>
                     @endcanany
                     @canany(['create about','edit about','view about','delete about'])
-                    <li><a class="nav-link {{ request()->is('admin/about-us*') ? 'active' : '' }}" href="{{ route('admin.about-us.index') }}">About US</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.about-us*') ? 'active' : '' }}" href="{{ route('admin.about-us.index') }}">About US</a></li>
                     @endcanany
                     @canany(['create team','edit team','view team','delete team'])
-                    <li><a class="nav-link {{ request()->is('admin/teams*') ? 'active' : '' }}" href="{{ route('admin.teams.index') }}">Teams</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.teams*') ? 'active' : '' }}" href="{{ route('admin.teams.index') }}">Teams</a></li>
                     @endcanany
                     @canany(['create client','edit client','view client','delete client'])
-                    <li><a class="nav-link {{ request()->is('admin/clients*') ? 'active' : '' }}" href="{{ route('admin.clients.index') }}">Clients</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.clients*') ? 'active' : '' }}" href="{{ route('admin.clients.index') }}">Clients</a></li>
                     @endcanany
                     @canany(['create offer','edit offer','view offer','delete offer'])
-                    <li><a class="nav-link {{ request()->is('admin/offers*') ? 'active' : '' }}" href="{{ route('admin.offers.index') }}">Offer</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.offers*') ? 'active' : '' }}" href="{{ route('admin.offers.index') }}">Offer</a></li>
                     @endcanany
                     @canany(['create common','edit common','view common','delete common'])
-                    <li><a class="nav-link {{ request()->is('admin/common-section*') ? 'active' : '' }}" href="{{ route('admin.common-section.index') }}">Common Section</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.common-section*') ? 'active' : '' }}" href="{{ route('admin.common-section.index') }}">Certificated/Programe Section</a></li>
                     @endcanany
                     @canany(['create commission','edit commission','view commission','delete commission'])
-                    <li><a class="nav-link {{ request()->is('admin/commission-level*') ? 'active' : '' }}" href="{{ route('admin.commission-level.index') }}">Seller Commision</a></li>
+                    <li><a class="nav-link {{ request()->is('admin.commission-level*') ? 'active' : '' }}" href="{{ route('admin.commission-level.index') }}">Affiliate Commission</a></li>
+                    @endcanany
+                    @canany(['create commission','edit commission','view commission','delete commission'])
+                    <li><a class="nav-link {{ request()->is('admin.seller-commision*') ? 'active' : '' }}" href="{{ route('admin.seller-commision.index') }}">Seller Commission</a></li>
                     @endcanany
                 </ul>
             </div>

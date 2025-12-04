@@ -24,13 +24,13 @@ return new class extends Migration
             $table->string('image')->nullable();
 
             // Counts
-            $table->integer('client_count')->nullable();
+            $table->string('client_count')->nullable();
             $table->string('client_title')->nullable();
-            $table->integer('monthly_transaction_count')->nullable();
+            $table->string('monthly_transaction_count')->nullable();
             $table->string('monthly_transaction_title')->nullable();
-            $table->integer('member_count')->nullable();
+            $table->string('member_count')->nullable();
             $table->string('member_title')->nullable();
-            $table->integer('experience_count')->nullable();
+            $table->string('experience_count')->nullable();
             $table->string('experience_title')->nullable();
 
             // Mission Section

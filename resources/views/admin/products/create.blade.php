@@ -89,10 +89,18 @@
                                     </div>
                                 </div>
 
+
+                                <div class="mb-3">
+                                    <label class="form-label">Short Description</label>
+                                    <textarea name="short_description" rows="4" class="form-control summernote">{{ old('short_description') }}</textarea>
+                                </div>
+
                                 <div class="mb-3">
                                     <label class="form-label">Description</label>
                                     <textarea name="description" rows="4" class="form-control summernote">{{ old('description') }}</textarea>
                                 </div>
+
+
                             </div>
                         </div>
 

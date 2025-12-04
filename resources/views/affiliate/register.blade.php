@@ -2,104 +2,144 @@
 @section('title','Affiliate Register Form')
 
 @section('content')
-<section class="affiliate-registration py-5" style="background: #d6d3d3;">
+<section class="affiliate-registration py-5" style="background: #f1f1f1;">
     <div class="container">
         <div class="row justify-content-center text-left">
             <div class="col-lg-7 col-md-10">
-                <div class="affiliate-form px-5 py-5 shadow-sm rounded-4 bg-white" style="border-radius: 15px;">
-                    <h2 class="affiliate-title mb-4 text-center border-bottom pb-3 font-weight-bold text-success">Affiliate Program Registration</h2>
+                <div class="affiliate-form px-5 py-5 shadow-sm rounded-4 bg-white">
+                    
+                    <h2 class="affiliate-title mb-4 text-center border-bottom pb-3 font-weight-bold text-success">
+                        Affiliate Program Registration
+                    </h2>
 
-                    <form action="{{ route('affiliate.register.submit') }}" method="POST" id="affiliateForm">
-                        @csrf
-
-                        {{-- Display Errors --}}
-                        @if ($errors->any())
+                    {{-- Global Validation Error --}}
+                    @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul class="mb-0">
                                 @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                    <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
                         </div>
-                        @endif
+                    @endif
+
+                    <form action="{{ route('affiliate.register.store') }}" method="POST" id="affiliateForm">
+                        @csrf
 
                         <!-- Personal Information -->
-                        <h4 class="mb-3">Personal Information</h4>
-                        <div class="row g-3 mb-4">
+                        <h4 class="mb-3 mt-4">Personal Information</h4>
+                        <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="firstName" class="form-label">First Name</label>
-                                <input name="fname" type="text" class="form-control" id="firstName" placeholder="John" required value="{{ old('fname') }}">
+                                <label>First Name</label>
+                                <input name="fname" type="text" class="form-control @error('fname') is-invalid @enderror"
+                                       value="{{ old('fname') }}" required>
+                                @error('fname') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
+
                             <div class="col-md-6 mb-3">
-                                <label for="lastName" class="form-label">Last Name</label>
-                                <input name="lname" type="text" class="form-control" id="lastName" placeholder="Doe" required value="{{ old('lname') }}">
+                                <label>Last Name</label>
+                                <input name="lname" type="text" class="form-control @error('lname') is-invalid @enderror"
+                                       value="{{ old('lname') }}" required>
+                                @error('lname') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
+
                             <div class="col-12 mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input name="email" type="email" class="form-control" id="email" placeholder="john@example.com" required value="{{ old('email') }}">
+                                <label>Email</label>
+                                <input name="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                                       value="{{ old('email') }}" required>
+                                @error('email') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
+
                             <div class="col-12 mb-3">
-                                <label for="phone" class="form-label">Phone</label>
-                                <input name="phone" type="text" class="form-control" id="phone" placeholder="+8801XXXXXXXXX" required value="{{ old('phone') }}">
+                                <label>Phone</label>
+                                <input name="phone" type="text" class="form-control @error('phone') is-invalid @enderror"
+                                       value="{{ old('phone') }}" required>
+                                @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
                         </div>
 
                         <!-- Account Information -->
-                        <h4 class="mb-3">Account Information</h4>
-                        <div class="row g-3 mb-4">
+                        <h4 class="mb-3 mt-4">Account Information</h4>
+                        <div class="row">
+
                             <div class="col-12 mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input name="username" type="text" class="form-control" id="username" placeholder="Choose a username" required value="{{ old('username') }}">
-                            </div>
-                            <div class="col-md-6 mb-3 position-relative">
-                                <label for="password" class="form-label">Password</label>
-                                <input name="password" type="password" class="form-control" id="password" placeholder="Enter password" required>
-                                <!-- <span onclick="togglePassword('password', this)"
-                                    class="position-absolute top-50 end-0 px-3 cursor-pointer text-gray-500">👁️</span> -->
+                                <label>Username</label>
+                                <input name="username" type="text" class="form-control @error('username') is-invalid @enderror"
+                                       value="{{ old('username') }}" required>
+                                @error('username') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
                             <div class="col-md-6 mb-3 position-relative">
-                                <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                <input name="password_confirmation" type="password" class="form-control" id="password_confirmation" placeholder="Confirm password" required>
-                                <!-- <span onclick="togglePassword('password_confirmation', this)"
-                                    class="position-absolute top-50 end-0 px-3 cursor-pointer text-gray-500">👁️</span> -->
+                                <label>Password</label>
+                                <div class="input-group">
+                                    <input name="password" type="password"
+                                           class="form-control @error('password') is-invalid @enderror"
+                                           id="password" required>
+                                    <span class="input-group-text" id="togglePassword" style="cursor:pointer;">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                </div>
+                                @error('password') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-3 position-relative">
+                                <label>Confirm Password</label>
+                                <div class="input-group">
+                                    <input name="password_confirmation" type="password" class="form-control" id="password_confirmation" required>
+                                    <span class="input-group-text" id="toggleConfirmPassword" style="cursor:pointer;">
+                                        <i class="fa fa-eye"></i>
+                                    </span>
+                                </div>
                             </div>
 
                         </div>
 
                         <!-- Affiliate Details -->
-                        <h4 class="mb-3">Affiliate Details</h4>
-                        <div class="row g-3 mb-4">
+                        <h4 class="mb-3 mt-4">Affiliate Details</h4>
+                        <div class="row">
                             <div class="col-12 mb-3">
-                                <label for="website" class="form-label">Website / Blog URL</label>
-                                <input name="website_url" type="url" class="form-control" id="website" placeholder="https://example.com" required value="{{ old('website_url') }}">
+                                <label>Website / Blog URL</label>
+                                <input name="website_url" type="url"
+                                       class="form-control @error('website_url') is-invalid @enderror"
+                                       value="{{ old('website_url') }}" required>
+                                @error('website_url') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
+
                             <div class="col-12 mb-3">
-                                <label for="social" class="form-label">Social Media Links</label>
-                                <input name="social_media_link" type="text" class="form-control" id="social" placeholder="Facebook / Instagram / YouTube" value="{{ old('social_media_link') }}">
+                                <label>Social Media Links</label>
+                                <input name="social_media_link" type="text" class="form-control"
+                                       value="{{ old('social_media_link') }}">
                             </div>
+
                             <div class="col-12 mb-3">
-                                <label for="promoMethod" class="form-label">Promotion Method</label>
-                                <select name="promotion_method" class="form-select form-control" id="promoMethod" required>
+                                <label>Promotion Method</label>
+                                <select name="promotion_method" class="form-select form-control @error('promotion_method') is-invalid @enderror" required>
                                     <option value="">Select method</option>
                                     <option value="blog" {{ old('promotion_method') == 'blog' ? 'selected' : '' }}>Blog/Website</option>
                                     <option value="youtube" {{ old('promotion_method') == 'youtube' ? 'selected' : '' }}>YouTube</option>
                                     <option value="social" {{ old('promotion_method') == 'social' ? 'selected' : '' }}>Social Media</option>
                                     <option value="email" {{ old('promotion_method') == 'email' ? 'selected' : '' }}>Email Marketing</option>
                                 </select>
+                                @error('promotion_method') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
+
                             <div class="col-12 mb-3">
-                                <label for="referrer" class="form-label">Referrer (Optional)</label>
-                                <input name="referal_name_id" type="text" class="form-control" id="referrer" placeholder="Referrer ID or Name" value="{{ old('referal_name_id') }}">
+                                <label>Referrer (Optional)</label>
+                                <input name="referal_name_id" type="text" class="form-control"
+                                       value="{{ old('referal_name_id') }}">
                             </div>
                         </div>
 
                         <!-- Terms & Conditions -->
                         <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <input class="form-check-input @error('terms') is-invalid @enderror"
+                                   type="checkbox" name="terms" id="terms" required>
                             <label class="form-check-label" for="terms">
                                 I agree to the <a href="#">Terms & Conditions</a> of the Affiliate Program.
                             </label>
+                            @error('terms') 
+                                <br><small class="text-danger">{{ $message }}</small> 
+                            @enderror
                         </div>
 
                         <!-- Submit Button -->
@@ -118,6 +158,7 @@
                         </div>
 
                     </form>
+
                 </div>
             </div>
         </div>
@@ -125,19 +166,24 @@
 </section>
 
 <script>
-    // Toggle password visibility
-    function togglePassword(fieldId, el) {
-        const input = document.getElementById(fieldId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            el.textContent = '🙈';
-        } else {
-            input.type = 'password';
-            el.textContent = '👁️';
-        }
-    }
+    // ===== Password Show/Hide =====
+    document.getElementById('togglePassword').onclick = function() {
+        const pass = document.getElementById('password');
+        pass.type = pass.type === "password" ? "text" : "password";
+        this.innerHTML = pass.type === "password"
+            ? '<i class="fa fa-eye"></i>' 
+            : '<i class="fa fa-eye-slash"></i>';
+    };
 
-    // Confirm password validation before submit
+    document.getElementById('toggleConfirmPassword').onclick = function() {
+        const pass = document.getElementById('password_confirmation');
+        pass.type = pass.type === "password" ? "text" : "password";
+        this.innerHTML = pass.type === "password"
+            ? '<i class="fa fa-eye"></i>' 
+            : '<i class="fa fa-eye-slash"></i>';
+    };
+
+    // ===== Password Match Validation =====
     document.getElementById('affiliateForm').addEventListener('submit', function(e) {
         const pass = document.getElementById('password').value;
         const confirm = document.getElementById('password_confirmation').value;

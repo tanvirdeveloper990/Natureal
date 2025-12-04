@@ -90,6 +90,11 @@
                                     </div>
                                 </div>
 
+                                 <div class="mb-3">
+                                    <label class="form-label">Short Description</label>
+                                    <textarea name="short_description" rows="4" class="form-control summernote">{{ $product->short_description }}</textarea>
+                                </div>
+
                                 <div class="mb-3">
                                     <label class="form-label">Description</label>
                                     <textarea name="description" rows="4" class="form-control summernote">{{ $product->description }}</textarea>

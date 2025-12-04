@@ -215,12 +215,12 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">How to Work Button Text</label>
+                            <label class="form-label">Email Button Text</label>
                             <input type="text" name="how_to_work_button_text" value="{{ old('how_to_work_button_text', $data->how_to_work_button_text) }}" class="form-control">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">How to Work Button Link</label>
+                            <label class="form-label">Email</label>
                             <input type="text" name="how_to_work_button_link" value="{{ old('how_to_work_button_link', $data->how_to_work_button_link) }}" class="form-control">
                         </div>
                     </div>
